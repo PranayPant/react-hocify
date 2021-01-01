@@ -20,22 +20,22 @@ export default function withTalk(Talk, hocInfos) {
                     data: null,
                     errors: null,
                     loader: {
-                        component: () => <></>,
+                        component: () => null,
                         props: {},
                         show: false,
                     },
                     success: {
-                        component: () => <></>,
+                        component: () => null,
                         props: {},
                         show: false,
                     },
                     error: {
-                        component: () => <></>,
+                        component: () => null,
                         props: {},
                         show: false,
                     },
                     before: {
-                        component: () => <></>,
+                        component: () => null,
                         props: {},
                         show: false,
                         resolvers,
