@@ -2,9 +2,9 @@
   "name": "react-hocify",
   "version": "1.0.3",
   "description": "A HOC wrapper around React components to manage state of async-driven UI components(e.g. Banners, Modals, etc)",
-  "main": "index.js",
+  "main": "dist/hocify.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "rm -rf dist && mkdir dist &&  babel hocify.js -d dist --copy-files"
   },
   "repository": {
     "type": "git",
@@ -23,12 +23,11 @@
   },
   "homepage": "https://github.com/PranayPant/react-hocify#readme",
   "dependencies": {
+    "@babel/core": "^7.12.10",
     "react": "^16.13.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.12.10",
     "@babel/preset-react": "^7.12.10"
-  },
-  "babel": {
-    "presets": ["react"]
   }
 }
