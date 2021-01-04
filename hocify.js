@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 
-export default function withTalk(Talk, hocInfos) {
+export default function withHOC(Talk, hocInfos, props) {
     return () => {
 
         const makeState = (infos) => {
@@ -319,7 +319,7 @@ export default function withTalk(Talk, hocInfos) {
                     )
                 })}
 
-                <Talk fnInfo={fnInfo} data={data} components={{...components}} errors={errors} />
+                <Talk {...props} fnInfo={fnInfo} data={data} components={{...components}} errors={errors} />
                 
             </>
         )
