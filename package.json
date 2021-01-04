@@ -1,10 +1,10 @@
 {
   "name": "react-hocify",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "A HOC wrapper around React components to manage state of async-driven UI components(e.g. Banners, Modals, etc)",
   "main": "dist/hocify.js",
   "scripts": {
-    "publish": "rm -rf dist && mkdir dist &&  babel hocify.js -d dist --copy-files"
+    "compile": "rm -rf dist && mkdir dist &&  babel hocify.js -d dist --copy-files"
   },
   "repository": {
     "type": "git",

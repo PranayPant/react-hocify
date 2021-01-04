@@ -1,6 +1,8 @@
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-export default function withTalk(Talk, hocInfos) {
+export default function withHOC(Talk, hocInfos, props) {
   return () => {
     const makeState = infos => {
       const state = {
@@ -322,12 +324,12 @@ export default function withTalk(Talk, hocInfos) {
       return /*#__PURE__*/React.createElement(React.Fragment, {
         key: i
       }, state[name].before.show && /*#__PURE__*/React.createElement(BeforeComponent, beforeProps), state[name].loader.show && /*#__PURE__*/React.createElement(LoaderComponent, loaderProps), state[name].success.show && /*#__PURE__*/React.createElement(SuccessComponent, successProps), state[name].error.show && /*#__PURE__*/React.createElement(ErrorComponent, errorProps));
-    }), /*#__PURE__*/React.createElement(Talk, {
+    }), /*#__PURE__*/React.createElement(Talk, _extends({}, props, {
       fnInfo: fnInfo,
       data: data,
       components: { ...components
       },
       errors: errors
-    }));
+    })));
   };
 }
