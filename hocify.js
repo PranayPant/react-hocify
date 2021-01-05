@@ -98,7 +98,7 @@ export default function withHOC(Talk, hocInfos, props) {
                     ...prev,
                     [name]: {
                         ...prev[name], 
-                        loader: _.isEmpty(loader) ? null : {
+                        loader: {
                             ...prev[name].loader,
                             component: loader.component,
                             props: { ...loader.props( props => setLoaderProps(name, props) , prev[name].data, prev[name].errors) },
@@ -111,50 +111,46 @@ export default function withHOC(Talk, hocInfos, props) {
             try{
                 const response = await action(data)
 
-                if(!_.isEmpty(loader) || !_.isEmpty(success)){
-                    setState( prev => {
-                        return { 
-                            ...prev,
-                            [name]: {
-                                ...prev[name],
-                                data: response,
-                                loader: _.isEmpty(loader) ? null : {
-                                    ...prev[name].loader, 
-                                    props: {}
-                                }, 
-                                success: _.isEmpty(success) ? null : {
-                                    ...prev[name].success,
-                                    show: shouldShowComponent(success),
-                                    component: success.component,
-                                    props: { ...success.props( props => setSuccessProps(name, props), response, prev[name].errors) },
-                                }
+                setState( prev => {
+                    return { 
+                        ...prev,
+                        [name]: {
+                            ...prev[name],
+                            data: response,
+                            loader: _.isEmpty(loader) ? null : {
+                                ...prev[name].loader, 
+                                props: {}
+                            }, 
+                            success: _.isEmpty(success) ? null : {
+                                ...prev[name].success,
+                                show: shouldShowComponent(success),
+                                component: success.component,
+                                props: { ...success.props( props => setSuccessProps(name, props), response, prev[name].errors) },
                             }
-                        } 
-                    })
-                }
+                        }
+                    } 
+                })
             }
             catch(err){
-                if(!_.isEmpty(loader) || !_.isEmpty(error)){
-                    setState( prev => {
-                        return { 
-                            ...prev,
-                            [name]: {
-                                ...prev[name],
-                                errors: err,
-                                loader: _.isEmpty(loader) ? null : {
-                                    ...prev[name].loader, 
-                                    props: {}
-                                }, 
-                                error: _.isEmpty(error) ? null : {
-                                    ...prev[name].error,
-                                    show: shouldShowComponent(error),
-                                    component: error.component,
-                                    props: { ...error.props( props => setErrorProps(name, props), prev[name].data, err) },
-                                }
+                setState( prev => {
+                    return { 
+                        ...prev,
+                        [name]: {
+                            ...prev[name],
+                            errors: err,
+                            loader: _.isEmpty(loader) ? null : {
+                                ...prev[name].loader, 
+                                props: {}
+                            }, 
+                            error: _.isEmpty(error) ? null : {
+                                ...prev[name].error,
+                                show: shouldShowComponent(error),
+                                component: error.component,
+                                props: { ...error.props( props => setErrorProps(name, props), prev[name].data, err) },
                             }
-                        } 
-                    })
-                }
+                        }
+                    } 
+                })
             }
 
         }

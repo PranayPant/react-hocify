@@ -84,6 +84,10 @@ export default function withHOC(Talk, hocInfos, props) {
     const setBeforeProps = (name, p) => setComponentProps(name, p, 'before');
 
     const shouldShowComponent = component => {
+      if (_.isEmpty(component)) {
+        return false;
+      }
+
       if (component.render === null || component.render === undefined) {
         return true;
       }
@@ -114,46 +118,39 @@ export default function withHOC(Talk, hocInfos, props) {
 
       try {
         const response = await action(data);
-
-        if (!_.isEmpty(loader) || !_.isEmpty(success)) {
-          setState(prev => {
-            return { ...prev,
-              [name]: { ...prev[name],
-                data: response,
-                loader: { ...prev[name].loader,
-                  props: {}
-                },
-                success: { ...prev[name].success,
-                  show: shouldShowComponent(success),
-                  component: success.component,
-                  props: { ...success.props(props => setSuccessProps(name, props), response, prev[name].errors)
-                  }
+        setState(prev => {
+          return { ...prev,
+            [name]: { ...prev[name],
+              data: response,
+              loader: _.isEmpty(loader) ? null : { ...prev[name].loader,
+                props: {}
+              },
+              success: _.isEmpty(success) ? null : { ...prev[name].success,
+                show: shouldShowComponent(success),
+                component: success.component,
+                props: { ...success.props(props => setSuccessProps(name, props), response, prev[name].errors)
                 }
               }
-            };
-          });
-        }
+            }
+          };
+        });
       } catch (err) {
-        console.log('err is', err);
-
-        if (!_.isEmpty(loader) || !_.isEmpty(error)) {
-          setState(prev => {
-            return { ...prev,
-              [name]: { ...prev[name],
-                errors: err,
-                loader: { ...prev[name].loader,
-                  props: {}
-                },
-                error: { ...prev[name].error,
-                  show: shouldShowComponent(error),
-                  component: error.component,
-                  props: { ...error.props(props => setErrorProps(name, props), prev[name].data, err)
-                  }
+        setState(prev => {
+          return { ...prev,
+            [name]: { ...prev[name],
+              errors: err,
+              loader: _.isEmpty(loader) ? null : { ...prev[name].loader,
+                props: {}
+              },
+              error: _.isEmpty(error) ? null : { ...prev[name].error,
+                show: shouldShowComponent(error),
+                component: error.component,
+                props: { ...error.props(props => setErrorProps(name, props), prev[name].data, err)
                 }
               }
-            };
-          });
-        }
+            }
+          };
+        });
       }
     };
 
@@ -229,7 +226,7 @@ export default function withHOC(Talk, hocInfos, props) {
       setState(prev => {
         return { ...prev,
           [name]: { ...prev[name],
-            before: { ...prev[name].before,
+            before: _.isEmpty(before) ? null : { ...prev[name].before,
               show: shouldShowComponent(before)
             }
           }
@@ -313,17 +310,17 @@ export default function withHOC(Talk, hocInfos, props) {
       });
     }, [state.beforeReady]);
     return /*#__PURE__*/React.createElement(React.Fragment, null, Object.keys(state).filter(k => k !== 'beforeReady').map((name, i) => {
-      const BeforeComponent = state[name].before.component;
-      const beforeProps = state[name].before.props;
-      const LoaderComponent = state[name].loader.component;
-      const loaderProps = state[name].loader.props;
-      const SuccessComponent = state[name].success.component;
-      const successProps = state[name].success.props;
-      const ErrorComponent = state[name].error.component;
-      const errorProps = state[name].error.props;
+      const BeforeComponent = _.isEmpty(state[name].before) ? null : state[name].before.component;
+      const beforeProps = _.isEmpty(state[name].before) ? null : state[name].before.props;
+      const LoaderComponent = _.isEmpty(state[name].loader) ? null : state[name].loader.component;
+      const loaderProps = _.isEmpty(state[name].loader) ? null : state[name].loader.props;
+      const SuccessComponent = _.isEmpty(state[name].success) ? null : state[name].success.component;
+      const successProps = _.isEmpty(state[name].success) ? null : state[name].success.props;
+      const ErrorComponent = _.isEmpty(state[name].error) ? null : state[name].error.component;
+      const errorProps = _.isEmpty(state[name].error) ? null : state[name].error.props;
       return /*#__PURE__*/React.createElement(React.Fragment, {
         key: i
-      }, state[name].before.show && /*#__PURE__*/React.createElement(BeforeComponent, beforeProps), state[name].loader.show && /*#__PURE__*/React.createElement(LoaderComponent, loaderProps), state[name].success.show && /*#__PURE__*/React.createElement(SuccessComponent, successProps), state[name].error.show && /*#__PURE__*/React.createElement(ErrorComponent, errorProps));
+      }, state[name].before && state[name].before.show && /*#__PURE__*/React.createElement(BeforeComponent, beforeProps), state[name].loader && state[name].loader.show && /*#__PURE__*/React.createElement(LoaderComponent, loaderProps), state[name].success && state[name].success.show && /*#__PURE__*/React.createElement(SuccessComponent, successProps), state[name].error && state[name].error.show && /*#__PURE__*/React.createElement(ErrorComponent, errorProps));
     }), /*#__PURE__*/React.createElement(Talk, _extends({}, props, {
       fnInfo: fnInfo,
       data: data,
