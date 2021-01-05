@@ -82,6 +82,9 @@ export default function withHOC(Talk, hocInfos, props) {
         const setBeforeProps = (name, p) => setComponentProps(name, p, 'before')
 
         const shouldShowComponent = (component) => {
+            if(_.isEmpty(component)){
+                return false
+            }
             if(component.render === null || component.render === undefined ){
                 return true
             }
@@ -95,7 +98,7 @@ export default function withHOC(Talk, hocInfos, props) {
                     ...prev,
                     [name]: {
                         ...prev[name], 
-                        loader: {
+                        loader: _.isEmpty(loader) ? null : {
                             ...prev[name].loader,
                             component: loader.component,
                             props: { ...loader.props( props => setLoaderProps(name, props) , prev[name].data, prev[name].errors) },
@@ -115,11 +118,11 @@ export default function withHOC(Talk, hocInfos, props) {
                             [name]: {
                                 ...prev[name],
                                 data: response,
-                                loader: {
+                                loader: _.isEmpty(loader) ? null : {
                                     ...prev[name].loader, 
                                     props: {}
                                 }, 
-                                success: {
+                                success: _.isEmpty(success) ? null : {
                                     ...prev[name].success,
                                     show: shouldShowComponent(success),
                                     component: success.component,
@@ -131,7 +134,6 @@ export default function withHOC(Talk, hocInfos, props) {
                 }
             }
             catch(err){
-                console.log('err is', err)
                 if(!_.isEmpty(loader) || !_.isEmpty(error)){
                     setState( prev => {
                         return { 
@@ -139,11 +141,11 @@ export default function withHOC(Talk, hocInfos, props) {
                             [name]: {
                                 ...prev[name],
                                 errors: err,
-                                loader: {
+                                loader: _.isEmpty(loader) ? null : {
                                     ...prev[name].loader, 
                                     props: {}
                                 }, 
-                                error: {
+                                error: _.isEmpty(error) ? null : {
                                     ...prev[name].error,
                                     show: shouldShowComponent(error),
                                     component: error.component,
@@ -230,7 +232,7 @@ export default function withHOC(Talk, hocInfos, props) {
                     ...prev,                  
                     [name]: {
                         ...prev[name],
-                        before: {
+                        before: _.isEmpty(before) ? null : {
                             ...prev[name].before, 
                             show: shouldShowComponent(before)
                         }
@@ -289,30 +291,30 @@ export default function withHOC(Talk, hocInfos, props) {
                 
                 { Object.keys(state).filter(k => k !== 'beforeReady').map( (name, i) => {
 
-                    const BeforeComponent = state[name].before.component
-                    const beforeProps = state[name].before.props
+                    const BeforeComponent = _.isEmpty(state[name].before) ? null : state[name].before.component
+                    const beforeProps = _.isEmpty(state[name].before) ? null : state[name].before.props
 
-                    const LoaderComponent = state[name].loader.component
-                    const loaderProps = state[name].loader.props
+                    const LoaderComponent = _.isEmpty(state[name].loader) ? null : state[name].loader.component
+                    const loaderProps = _.isEmpty(state[name].loader) ? null : state[name].loader.props
 
-                    const SuccessComponent = state[name].success.component
-                    const successProps = state[name].success.props
+                    const SuccessComponent = _.isEmpty(state[name].success) ? null : state[name].success.component
+                    const successProps = _.isEmpty(state[name].success) ? null : state[name].success.props
 
-                    const ErrorComponent = state[name].error.component
-                    const errorProps = state[name].error.props
+                    const ErrorComponent = _.isEmpty(state[name].error) ? null : state[name].error.component
+                    const errorProps =  _.isEmpty(state[name].error) ? null : state[name].error.props
 
                     return (
                         <React.Fragment key={i}>
-                            { state[name].before.show &&
+                            { state[name].before && state[name].before.show &&
                                 <BeforeComponent {...beforeProps} />
                             }
-                            { state[name].loader.show &&
+                            { state[name].loader && state[name].loader.show &&
                                 <LoaderComponent {...loaderProps} />
                             }
-                            { state[name].success.show &&
+                            { state[name].success && state[name].success.show &&
                                 <SuccessComponent {...successProps} />
                             }
-                            { state[name].error.show &&
+                            { state[name].error && state[name].error.show &&
                                 <ErrorComponent {...errorProps} />
                             }
                         </React.Fragment>
